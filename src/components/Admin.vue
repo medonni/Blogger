@@ -12,11 +12,14 @@
             </div>
         </v-app-bar>
         <v-main>
-            <v-container>
-                <v-row v-if="loading">
-                    <div class="loading"> Loading...</div>
+            <v-container v-if="loading" class="fill-height">
+                <v-row class="fill-height loader__container">
+                    <v-progress-circular color="blue-lighten-3" :size="80" indeterminate>
+                    </v-progress-circular>
                 </v-row>
-                <v-row v-if="!loading">
+            </v-container>
+            <v-container v-if="!loading">
+                <v-row>
                     <v-col cols="12" md="12">
                         <v-expansion-panels variant="accordion">
                             <v-expansion-panel title="Search">
@@ -108,15 +111,10 @@
                                     <td>{{ post.body }}
                                     </td>
                                     <td>
-                                        <template>
-                                            <v-btn color="primary">
-                                                Edit
-                                            </v-btn>
-                                        </template>
-                                        <v-btn color="secondary" @click="editPost(post)">
+                                        <v-btn color="secondary" block @click="editPost(post)">
                                             Edit
                                         </v-btn>
-                                        <v-btn color="error" @click="deletePost(post.id)">
+                                        <v-btn color="error" block @click="deletePost(post.id)">
                                             Delete
                                         </v-btn>
                                     </td>
@@ -136,19 +134,17 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-select v-model="editPostData.name" clearable label="Name"
+                                            <v-select v-model="editPostData.userId" clearable label="Name"
                                                 :items="this.$store.state.users" item-title="name" item-value="userId"
                                                 required>
                                             </v-select>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editPostData.title" label="Title"
-                                                hint="example of helper text only on focus">
+                                            <v-text-field v-model="editPostData.title" label="Title">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field v-model="editPostData.body" label="Body"
-                                                hint="example of persistent helper text" persistent-hint required>
+                                            <v-text-field v-model="editPostData.body" label="Body" required>
                                             </v-text-field>
                                         </v-col>
                                     </v-row>
@@ -188,7 +184,7 @@ export default {
                 body: '',
             },
             editPostData: {
-                userId: '',
+                userId: null,
                 id: null,
                 title: '',
                 body: '',
@@ -229,13 +225,12 @@ export default {
             this.$store.commit("remove", id)
         },
         editPost(post) {
-            this.editPostData = post;
-            console.log(this.editPostData);
+            this.editPostData = { ...post };
             this.dialog = true;
         },
         saveEditedPost() {
             const newPost = {
-                userId: parseInt(this.editPostData.name),
+                userId: parseInt(this.editPostData.userId),
                 id: this.editPostData.id,
                 title: this.editPostData.title,
                 body: this.editPostData.body
@@ -251,7 +246,6 @@ export default {
                 body: this.addPostData.body
             }
             this.$store.commit("add", newPost)
-            this.$forceUpdate();
         },
         logout() {
             this.$store.commit("setAuth", false);
@@ -272,6 +266,12 @@ export default {
 </script>
 
 <style>
+.loader__container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 .v-toolbar__content {
     justify-content: space-between;
 }

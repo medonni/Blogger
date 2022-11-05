@@ -8,9 +8,10 @@
                         d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
                 </svg> -->
                 <v-form>
-                    <v-text-field type="text" v-model="input.username" @change="debug" label="Username" required>
+                    <v-text-field type="text" v-model="input.username" label="Username" :rules="usernameRules" required>
                     </v-text-field>
-                    <v-text-field type="password" v-model="input.password" @change="debug" label="Password" required>
+                    <v-text-field type="password" v-model="input.password" label="Password" :rules="passwordRules"
+                        required>
                     </v-text-field>
                     <v-alert v-if="wrongLoginInfo" text="Wrong username and/or password!" color="red" variant="plain">
                     </v-alert>
@@ -26,6 +27,15 @@ export default {
     name: "Login",
     data() {
         return {
+            valid: true,
+            usernameRules: [
+                username => !!username || 'Name is required',
+                username => (username && username.length >= 4) || 'Userame must be atleast 4 characters',
+            ],
+            passwordRules: [
+                pw => !!pw || 'Password is required',
+                pw => (pw && pw.length >= 4) || 'Password must be atleast 4 characters',
+            ],
             input: {
                 username: "",
                 password: "",
@@ -34,9 +44,6 @@ export default {
         }
     },
     methods: {
-        debug(event) {
-            console.log(event.target.value);
-        },
         login() {
             if (this.input.username === 'user' && this.input.password === 'user') {
                 this.$store.commit("setAuth", true)
