@@ -250,6 +250,7 @@ export default {
         logout() {
             this.$store.commit("setAuth", false);
             this.$store.commit("setAdmin", false);
+            this.$store.commit("clearPosts");
             this.$router.push({ name: 'Login' })
         }
     },

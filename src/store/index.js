@@ -97,6 +97,9 @@ const store = createStore({
     setAdmin(state, newState) {
       state.isAdmin = newState;
     },
+    clearPosts(state) {
+      state.posts = [];
+    },
   },
   getters: {
     getUser: (state) => (id) => {

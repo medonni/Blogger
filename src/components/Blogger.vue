@@ -109,12 +109,13 @@ export default {
     logout() {
       this.$store.commit("setAuth", false);
       this.$store.commit("setAdmin", false);
-      this.$router.push({ name: 'Login' })
+      this.$store.commit("clearPosts");
+      this.$router.push({ name: 'Login' });
     }
   },
   computed: {
     posts() {
-      return this.$store.state.posts
+      return this.$store.state.posts;
     },
     filteredPosts() {
       const filteredPosts = this.posts.filter(post => this.$store.getters.getUser(post.userId)["name"].toLowerCase().includes(this.searchName.toLowerCase()) && post.title.toLowerCase().includes(this.searchTitle.toLowerCase()) && post.body.toLowerCase().includes(this.searchBody.toLowerCase()));
